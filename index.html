@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Rider's Garage — Dirt Bike & Motorcycle Maintenance | Temecula, CA</title>
+<meta name="description" content="Professional dirt bike & motorcycle maintenance, tire changes, and trackside support in Temecula, CA. Former Cobra factory mechanic. Race day or trail day — I've got you. Text or call (208) 353-6210." />
+
+<!-- Open Graph / social sharing -->
+<meta property="og:title" content="The Rider's Garage — Dirt Bike & Motorcycle Maintenance" />
+<meta property="og:description" content="Professional service. Fair pricing. Race day or trail day — I've got you. Temecula, CA." />
+<meta property="og:image" content="assets/trg-logo.png" />
+<meta property="og:type" content="website" />
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/trg-logo.png" />
+
+<!-- Brand fonts: Bebas Neue (titles), Montserrat (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --red: #e10602;
+    --red-dark: #b00401;
+    --ink: #0d0d0f;
+    --ink-2: #16161a;
+    --panel: #1c1c21;
+    --line: #2a2a31;
+    --text: #f2f2f4;
+    --muted: #a7a7b0;
+    --gray: #9a9a9a;
+    --light: #ececee;
+    --light-panel: #f4f4f5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--ink);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .display {
+    font-family: "Bebas Neue", "Arial Narrow", "Helvetica Neue", Impact, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 0.98;
+    text-transform: uppercase;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,13,15,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; letter-spacing: 0.02em; }
+  .brand img.logo { height: 46px; width: auto; display: block; }
+  .topbar .brand img.logo { height: 42px; }
+  .nav { display: flex; gap: 26px; align-items: center; }
+  .nav a { color: var(--muted); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; transition: color .15s; }
+  .nav a:hover { color: #fff; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--red); color: #fff; font-weight: 800;
+    padding: 11px 20px; border-radius: 8px; font-size: 14px;
+    text-transform: uppercase; letter-spacing: 0.03em;
+    transition: transform .12s, background .15s; white-space: nowrap;
+  }
+  .btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+  .btn.big { padding: 16px 30px; font-size: 17px; }
+  .btn.ghost { background: transparent; border: 2px solid var(--line); color: #fff; }
+  .btn.ghost:hover { border-color: var(--red); background: transparent; }
+  @media (max-width: 820px) { .nav a:not(.btn) { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: 90px 0 70px;
+    background:
+      radial-gradient(1100px 500px at 78% 20%, rgba(226,23,42,0.18), transparent 60%),
+      linear-gradient(180deg, #0d0d0f 0%, #141418 100%);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(115deg, rgba(255,255,255,0.02) 0 2px, transparent 2px 22px);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+  .hero-logo { max-width: 440px; width: 72%; height: auto; margin-bottom: 26px; filter: drop-shadow(0 8px 30px rgba(0,0,0,0.6)); }
+  .eyebrow {
+    display: inline-block; background: var(--red); color: #fff;
+    font-weight: 800; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 4px; margin-bottom: 22px;
+  }
+  .hero h1 { font-size: clamp(44px, 8vw, 92px); }
+  .hero h1 .em { color: var(--red); }
+  .hero .lede {
+    margin-top: 22px; font-size: clamp(18px, 2.4vw, 23px); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.01em; max-width: 620px; line-height: 1.25;
+  }
+  .hero .sub { margin-top: 18px; color: var(--muted); font-size: 17px; max-width: 560px; }
+  .hero .cta-row { margin-top: 34px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .trust-row {
+    margin-top: 46px; display: flex; gap: 30px; flex-wrap: wrap;
+    padding-top: 26px; border-top: 1px solid var(--line);
+  }
+  .trust-item { display: flex; align-items: center; gap: 10px; font-weight: 800; text-transform: uppercase; font-size: 14px; letter-spacing: 0.03em; }
+  .trust-item .star { color: var(--red); font-size: 18px; }
+
+  /* ---------- Section shells ---------- */
+  section { padding: 78px 0; }
+  .section-head { margin-bottom: 40px; }
+  .section-head .kicker {
+    color: var(--red); font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; font-size: 14px;
+    display: block; margin-bottom: 10px;
+  }
+  .section-head h2 { font-size: clamp(30px, 5vw, 46px); }
+  .section-head p { color: var(--muted); margin-top: 12px; max-width: 620px; font-size: 17px; }
+
+  /* ---------- Services ---------- */
+  #services { background: var(--ink-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .svc {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--red);
+    padding: 16px 18px; border-radius: 8px; font-weight: 600; font-size: 15px;
+    transition: transform .12s, border-color .15s, background .15s;
+  }
+  .svc:hover { transform: translateY(-2px); background: #22222a; }
+  .svc .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex: none; }
+
+  /* ---------- Experience ---------- */
+  #experience .exp {
+    display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center;
+  }
+  .exp-card {
+    background: linear-gradient(160deg, #1c1c21, #141418);
+    border: 1px solid var(--line); border-radius: 16px; padding: 34px;
+  }
+  .flag { font-size: 40px; margin-bottom: 12px; }
+  .exp h2 { font-size: clamp(26px, 4vw, 38px); margin-bottom: 16px; }
+  .exp p { color: var(--muted); font-size: 17px; }
+  .exp .em { color: #fff; font-weight: 700; }
+  .exp .events { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { background: #26262e; border: 1px solid var(--line); color: var(--light); font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .stat-stack { display: grid; gap: 14px; }
+  .stat {
+    background: var(--red); color: #fff; border-radius: 14px; padding: 22px 24px;
+  }
+  .stat:nth-child(2) { background: var(--panel); border: 1px solid var(--line); }
+  .stat:nth-child(3) { background: var(--panel); border: 1px solid var(--line); }
+  .stat .n { font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-weight: 400; letter-spacing: 0.02em; font-size: 40px; line-height: 1; text-transform: uppercase; }
+  .stat .l { font-size: 14px; font-weight: 600; margin-top: 6px; opacity: 0.92; }
+  @media (max-width: 820px) { #experience .exp { grid-template-columns: 1fr; } }
+
+  /* ---------- Brands ---------- */
+  #brands { background: var(--ink-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); text-align: center; }
+  .brand-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 12px; margin-top: 8px; }
+  .brand-chip {
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-weight: 400; font-size: clamp(26px, 4vw, 38px);
+    letter-spacing: 0.02em; text-transform: uppercase; color: var(--light);
+    padding: 8px 4px; position: relative;
+  }
+  .brand-chip:not(:last-child)::after { content: "/"; color: var(--red); margin-left: 14px; }
+
+  /* ---------- Contact ---------- */
+  #contact { background: linear-gradient(180deg, #141418, #0d0d0f); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 34px;
+  }
+  .card.accent { background: linear-gradient(160deg, var(--red), var(--red-dark)); border: none; }
+  .card h3 { font-size: 22px; margin-bottom: 6px; }
+  .card .phone {
+    font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-weight: 400; letter-spacing: 0.03em; font-size: clamp(42px, 7vw, 60px);
+    letter-spacing: 0.01em; display: inline-block; margin: 6px 0 4px;
+  }
+  .card p { color: rgba(255,255,255,0.9); font-size: 16px; }
+  .card.dark p { color: var(--muted); }
+  .quote-note {
+    margin-top: 18px; background: rgba(255,255,255,0.14); border-radius: 10px; padding: 16px 18px;
+    font-weight: 700; text-transform: uppercase; font-size: 14px; letter-spacing: 0.02em; line-height: 1.5;
+  }
+  .quote-note .hl { color: #0d0d0f; background: #fff; padding: 1px 7px; border-radius: 4px; }
+  .loc { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .loc .pin { color: var(--red); font-size: 30px; }
+  .loc .place { font-family: "Bebas Neue", "Arial Narrow", sans-serif; font-weight: 400; font-size: 38px; text-transform: uppercase; }
+  .contact-cta { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn.on-red { background: #fff; color: var(--red-dark); }
+  .btn.on-red:hover { background: #0d0d0f; color: #fff; }
+  @media (max-width: 760px) { .contact-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Footer ---------- */
+  footer { background: #08080a; border-top: 1px solid var(--line); padding: 40px 0; }
+  .foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; color: var(--muted); font-size: 14px; }
+  .foot .brand { color: #fff; }
+
+  /* Sticky mobile call bar */
+  .mobile-call {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+    background: var(--red); color: #fff; text-align: center; font-weight: 800;
+    padding: 15px; font-size: 17px; letter-spacing: 0.03em; text-transform: uppercase;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+  }
+  @media (max-width: 640px) {
+    .mobile-call { display: block; }
+    body { padding-bottom: 56px; }
+  }
+
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="wrap">
+    <a href="#top" class="brand" aria-label="The Rider's Garage home"><img class="logo" src="assets/trg-logo.png" alt="The Rider's Garage — TRG" /></a>
+    <nav class="nav">
+      <a href="#services">Services</a>
+      <a href="#experience">Experience</a>
+      <a href="#brands">Brands</a>
+      <a href="tel:+12083536210" class="btn">Text or Call</a>
+    </nav>
+  </div>
+</header>
+
+<a name="top"></a>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Dirt Bike &amp; Motorcycle Service</span>
+    <h1>Service. Repair.<br><span class="em">Race Prep.</span></h1>
+    <p class="lede">Professional service. Fair pricing. Race day or trail day — I've got you.</p>
+    <p class="sub">From our garage to the gate. Shop service in Temecula, CA — from tire changes and oil swaps to full race prep and diagnostics, done right, done fast.</p>
+    <div class="cta-row">
+      <a href="tel:+12083536210" class="btn big">📞 (208) 353-6210</a>
+      <a href="#services" class="btn big ghost">View Services</a>
+    </div>
+    <div class="trust-row">
+      <div class="trust-item"><span class="star">★</span> Fair Pricing</div>
+      <div class="trust-item"><span class="star">★</span> Quick Turnaround</div>
+      <div class="trust-item"><span class="star">★</span> Race Day Reliable</div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">🔧 What I Do</span>
+      <h2>Services Include</h2>
+      <p>Everything to keep your bike dialed in and dependable — trailside, trackside, or in the shop.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><span class="dot"></span> Tire Changes</div>
+      <div class="svc reveal"><span class="dot"></span> Tubes &amp; Rim Locks</div>
+      <div class="svc reveal"><span class="dot"></span> Oil &amp; Filter Changes</div>
+      <div class="svc reveal"><span class="dot"></span> Air Filter Service</div>
+      <div class="svc reveal"><span class="dot"></span> Chain &amp; Sprockets</div>
+      <div class="svc reveal"><span class="dot"></span> Brake Service</div>
+      <div class="svc reveal"><span class="dot"></span> Coolant Changes</div>
+      <div class="svc reveal"><span class="dot"></span> Spark Plugs</div>
+      <div class="svc reveal"><span class="dot"></span> Valve Checks / Adjustments</div>
+      <div class="svc reveal"><span class="dot"></span> Compression &amp; Leak-Down Testing</div>
+      <div class="svc reveal"><span class="dot"></span> Diagnostics &amp; Troubleshooting</div>
+      <div class="svc reveal"><span class="dot"></span> General Maintenance &amp; Repairs</div>
+      <div class="svc reveal"><span class="dot"></span> Race Prep &amp; Bike Setup</div>
+      <div class="svc reveal"><span class="dot"></span> Cobra Race Bike Maintenance</div>
+      <div class="svc reveal"><span class="dot"></span> And More — Just Ask</div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="wrap">
+    <div class="exp">
+      <div class="exp-card reveal">
+        <div class="flag">🏁</div>
+        <h2>Trackside Experience You Can Trust</h2>
+        <p>Former <span class="em">Trackside Support &amp; Cobra Motorcycle Mechanic</span> at Moto4Kids, Swapmoto Live, 2X Promotions and other SoCal motocross events.</p>
+        <p style="margin-top:14px; font-style: italic;">Years of hands-on experience keeping riders on the track.</p>
+        <div class="events">
+          <span class="tag">Moto4Kids</span>
+          <span class="tag">Swapmoto Live</span>
+          <span class="tag">2X Promotions</span>
+          <span class="tag">SoCal Motocross</span>
+        </div>
+      </div>
+      <div class="stat-stack reveal">
+        <div class="stat">
+          <div class="n">Race Day</div>
+          <div class="l">Reliable support when it counts most</div>
+        </div>
+        <div class="stat">
+          <div class="n">Factory</div>
+          <div class="l">Cobra race bike experience</div>
+        </div>
+        <div class="stat">
+          <div class="n">Fair &amp; Fast</div>
+          <div class="l">Honest pricing, quick turnaround</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Brands -->
+<section id="brands">
+  <div class="wrap">
+    <div class="section-head reveal" style="margin-bottom: 26px;">
+      <span class="kicker">🏍️ Working On</span>
+      <h2>Brands I Service</h2>
+    </div>
+    <div class="brand-row reveal">
+      <span class="brand-chip">Honda</span>
+      <span class="brand-chip">Yamaha</span>
+      <span class="brand-chip">Kawasaki</span>
+      <span class="brand-chip">Suzuki</span>
+      <span class="brand-chip">KTM</span>
+      <span class="brand-chip">Husqvarna</span>
+      <span class="brand-chip">GasGas</span>
+      <span class="brand-chip">Cobra</span>
+      <span class="brand-chip">&amp; More</span>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">📩 Get a Quote</span>
+      <h2>Text or Call</h2>
+      <p>Message me with your <strong>year / make / model</strong> and what you need done for a quote.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="card accent reveal">
+        <h3>Ready When You Are</h3>
+        <a href="tel:+12083536210" class="phone">(208) 353-6210</a>
+        <p>Text or call — I'll get back to you fast.</p>
+        <div class="quote-note">
+          Send me your <span class="hl">Year</span> <span class="hl">Make</span> <span class="hl">Model</span> and what you need done for a quote.
+        </div>
+        <div class="contact-cta">
+          <a href="tel:+12083536210" class="btn on-red">📞 Call Now</a>
+          <a href="sms:+12083536210" class="btn on-red">💬 Send a Text</a>
+        </div>
+      </div>
+      <div class="card dark reveal">
+        <h3>Located In</h3>
+        <div class="loc">
+          <span class="pin">📍</span>
+          <span class="place">Temecula, CA</span>
+        </div>
+        <p style="margin-top:14px;">Serving Temecula and the surrounding SoCal riding &amp; racing community. Trackside support available for events — reach out to arrange.</p>
+        <div class="contact-cta">
+          <a href="https://maps.google.com/?q=Temecula,CA" target="_blank" rel="noopener" class="btn ghost">Open in Maps</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <a href="#top" class="brand"><img class="logo" src="assets/trg-logo.png" alt="The Rider's Garage" style="height:56px;" /></a>
+    <div>Dirt Bike &amp; Motorcycle Maintenance • Temecula, CA • (208) 353-6210</div>
+    <div>© <span id="yr"></span> The Rider's Garage</div>
+  </div>
+</footer>
+
+<a href="tel:+12083536210" class="mobile-call">📞 Tap to Call — (208) 353-6210</a>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+</script>
+</body>
+</html>
