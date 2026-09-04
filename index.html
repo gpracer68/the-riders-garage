@@ -533,10 +533,11 @@
     var VID = /\.(mp4|webm|mov|m4v|ogv)$/i;
 
     function prettyCaption(name) {
-      return name.replace(/\.[^.]+$/, '')      // drop extension
-        .replace(/^\d+[-_. ]*/, '')             // drop leading order number
-        .replace(/[-_]+/g, ' ')                 // dashes/underscores -> spaces
+      var s = name.replace(/\.[^.]+$/, '')     // drop extension
+        .replace(/^\d+[-_. ]*/, '')            // drop leading order number
+        .replace(/[-_]+/g, ' ')                // dashes/underscores -> spaces
         .replace(/\s+/g, ' ').trim();
+      return /[a-z]/i.test(s) ? s : '';        // suppress timestamp-only names
     }
     function emptyState() {
       grid.innerHTML = '<div class="gallery-empty"><div class="big">Fresh photos &amp; videos coming soon</div>' +
