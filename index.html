@@ -262,13 +262,17 @@
   .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease, opacity .3s ease; opacity: 0; }
   .g-item img.loaded { opacity: 1; }
   .g-item:hover img { transform: scale(1.06); }
+  .g-item video { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+  .g-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 3; width: 54px; height: 54px; border-radius: 50%; background: rgba(225,6,2,.92); display: flex; align-items: center; justify-content: center; pointer-events: none; box-shadow: 0 4px 16px rgba(0,0,0,.4); }
+  .g-play::before { content: ""; border-style: solid; border-width: 10px 0 10px 17px; border-color: transparent transparent transparent #fff; margin-left: 4px; }
   .g-item::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 -60px 50px -30px rgba(0,0,0,0.55); pointer-events: none; }
   .g-cap { position: absolute; left: 10px; bottom: 8px; right: 10px; z-index: 2; color: #fff; font-size: 13px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,.6); pointer-events: none; }
 
   /* Lightbox */
   .lightbox { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; }
   .lightbox[hidden] { display: none; }
-  .lb-img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 10px 60px rgba(0,0,0,.6); }
+  .lb-stage { display: flex; align-items: center; justify-content: center; }
+  .lb-stage img, .lb-stage video { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 10px 60px rgba(0,0,0,.6); background: #000; }
   .lb-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: #fff; font-size: 40px; line-height: 1; cursor: pointer; opacity: .85; }
   .lb-close:hover { opacity: 1; }
   .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.12); border: none; color: #fff; font-size: 26px; width: 52px; height: 52px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -383,7 +387,7 @@
     <div class="section-head reveal">
       <span class="kicker">📸 Proof On The Track</span>
       <h2>Our Work</h2>
-      <p>Real builds, repairs, and race prep from the shop. Swipe through recent jobs.</p>
+      <p>Real builds, repairs, and race prep from the shop — photos and clips. Tap any one to view it full-size.</p>
     </div>
     <div id="galleryGrid" class="gallery-grid reveal" aria-live="polite">
       <div class="gallery-loading">Loading photos…</div>
@@ -395,7 +399,7 @@
 <div id="lightbox" class="lightbox" hidden>
   <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
   <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">&#10094;</button>
-  <img id="lbImg" class="lb-img" src="" alt="" />
+  <div id="lbStage" class="lb-stage"></div>
   <button class="lb-nav lb-next" id="lbNext" aria-label="Next">&#10095;</button>
 </div>
 
@@ -519,13 +523,14 @@
   })();
 
   // ---------- Our Work gallery ----------
-  // Auto-loads every image in the repo's assets/gallery/ folder via the GitHub
-  // API, so adding a photo = uploading it to that folder (no code changes).
+  // Auto-loads every photo AND video in the repo's assets/gallery/ folder via the
+  // GitHub API, so adding media = uploading it to that folder (no code changes).
   (function () {
     var GH_API = 'https://api.github.com/repos/gpracer68/the-riders-garage/contents/assets/gallery';
     var grid = document.getElementById('galleryGrid');
     if (!grid) return;
     var IMG = /\.(jpe?g|png|webp|gif|avif)$/i;
+    var VID = /\.(mp4|webm|mov|m4v|ogv)$/i;
 
     function prettyCaption(name) {
       return name.replace(/\.[^.]+$/, '')      // drop extension
@@ -534,43 +539,65 @@
         .replace(/\s+/g, ' ').trim();
     }
     function emptyState() {
-      grid.innerHTML = '<div class="gallery-empty"><div class="big">Fresh photos coming soon</div>' +
+      grid.innerHTML = '<div class="gallery-empty"><div class="big">Fresh photos &amp; videos coming soon</div>' +
         'Recent builds and repairs will show up here.</div>';
     }
 
     fetch(GH_API, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
       .then(function (r) { if (!r.ok) throw new Error('gallery ' + r.status); return r.json(); })
       .then(function (files) {
-        var imgs = (files || []).filter(function (f) { return f.type === 'file' && IMG.test(f.name); })
+        var media = (files || []).filter(function (f) { return f.type === 'file' && (IMG.test(f.name) || VID.test(f.name)); })
           .sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true }); });
-        if (!imgs.length) { emptyState(); return; }
-        window.__trgPhotos = imgs.map(function (f) { return { url: f.download_url, cap: prettyCaption(f.name) }; });
+        if (!media.length) { emptyState(); return; }
+        window.__trgMedia = media.map(function (f) {
+          return { url: f.download_url, cap: prettyCaption(f.name), video: VID.test(f.name) };
+        });
         grid.innerHTML = '';
-        window.__trgPhotos.forEach(function (p, i) {
+        window.__trgMedia.forEach(function (m, i) {
           var btn = document.createElement('button');
           btn.className = 'g-item';
-          btn.setAttribute('aria-label', p.cap || 'Photo ' + (i + 1));
-          var im = new Image();
-          im.loading = 'lazy';
-          im.alt = p.cap || 'The Rider\'s Garage work photo';
-          im.onload = function () { im.classList.add('loaded'); };
-          im.src = p.url;
-          btn.appendChild(im);
-          if (p.cap) { var c = document.createElement('span'); c.className = 'g-cap'; c.textContent = p.cap; btn.appendChild(c); }
+          btn.setAttribute('aria-label', m.cap || (m.video ? 'Video ' : 'Photo ') + (i + 1));
+          if (m.video) {
+            var v = document.createElement('video');
+            v.preload = 'metadata'; v.muted = true; v.playsInline = true;
+            v.src = m.url + '#t=0.1';           // nudge to first frame for a thumbnail
+            btn.appendChild(v);
+            var play = document.createElement('span'); play.className = 'g-play'; btn.appendChild(play);
+          } else {
+            var im = new Image();
+            im.loading = 'lazy';
+            im.alt = m.cap || 'The Rider\'s Garage work photo';
+            im.onload = function () { im.classList.add('loaded'); };
+            im.src = m.url;
+            btn.appendChild(im);
+          }
+          if (m.cap) { var c = document.createElement('span'); c.className = 'g-cap'; c.textContent = m.cap; btn.appendChild(c); }
           btn.addEventListener('click', function () { openLightbox(i); });
           grid.appendChild(btn);
         });
       })
       .catch(function () { emptyState(); });
 
-    // Lightbox
-    var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg');
+    // Lightbox (image or video)
+    var lb = document.getElementById('lightbox'), stage = document.getElementById('lbStage');
     var cur = 0;
     function openLightbox(i) {
-      var ps = window.__trgPhotos || []; if (!ps.length) return;
-      cur = (i + ps.length) % ps.length; lbImg.src = ps[cur].url; lbImg.alt = ps[cur].cap || ''; lb.hidden = false;
+      var ms = window.__trgMedia || []; if (!ms.length) return;
+      cur = (i + ms.length) % ms.length;
+      var m = ms[cur];
+      stage.innerHTML = '';
+      if (m.video) {
+        var v = document.createElement('video');
+        v.src = m.url; v.controls = true; v.autoplay = true; v.playsInline = true;
+        stage.appendChild(v);
+      } else {
+        var im = document.createElement('img');
+        im.src = m.url; im.alt = m.cap || '';
+        stage.appendChild(im);
+      }
+      lb.hidden = false;
     }
-    function close() { lb.hidden = true; lbImg.src = ''; }
+    function close() { lb.hidden = true; stage.innerHTML = ''; }
     function step(d) { openLightbox(cur + d); }
     document.getElementById('lbClose').onclick = close;
     document.getElementById('lbPrev').onclick = function (e) { e.stopPropagation(); step(-1); };
