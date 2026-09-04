@@ -256,6 +256,8 @@
 
   /* ---------- Our Work gallery ---------- */
   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .g-hidden { display: none !important; }
+  .gallery-more-wrap { text-align: center; margin-top: 22px; }
   .gallery-loading, .gallery-empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px 20px; }
   .gallery-empty .big { color: #fff; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
   .g-item { position: relative; display: block; border: 0; padding: 0; margin: 0; background: #000; border-radius: 12px; overflow: hidden; cursor: pointer; aspect-ratio: 4 / 3; }
@@ -576,6 +578,28 @@
           btn.addEventListener('click', function () { openLightbox(i); });
           grid.appendChild(btn);
         });
+
+        // Show the first 8; reveal the rest with a "View all" toggle.
+        var LIMIT = 8;
+        if (window.__trgMedia.length > LIMIT) {
+          var tiles = grid.querySelectorAll('.g-item');
+          for (var k = LIMIT; k < tiles.length; k++) tiles[k].classList.add('g-hidden');
+          var wrap = document.createElement('div'); wrap.className = 'gallery-more-wrap';
+          var mb = document.createElement('button'); mb.type = 'button'; mb.className = 'btn ghost';
+          var moreLabel = 'View all ' + window.__trgMedia.length + ' photos &amp; videos';
+          mb.innerHTML = moreLabel;
+          var expanded = false;
+          mb.addEventListener('click', function () {
+            expanded = !expanded;
+            grid.querySelectorAll('.g-item').forEach(function (el, idx) {
+              if (idx >= LIMIT) el.classList.toggle('g-hidden', !expanded);
+            });
+            mb.innerHTML = expanded ? 'Show less' : moreLabel;
+            if (!expanded) { var w = document.getElementById('work'); if (w) w.scrollIntoView({ behavior: 'smooth' }); }
+          });
+          wrap.appendChild(mb);
+          grid.parentNode.appendChild(wrap);
+        }
       })
       .catch(function () { emptyState(); });
 
