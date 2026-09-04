@@ -253,6 +253,28 @@
   /* Calendly inline widget sits flush inside the panel when live */
   .calendly-inline-widget { min-width: 320px; height: 720px; }
   @media (max-width: 640px) { .calendly-inline-widget { height: 1000px; } }
+
+  /* ---------- Our Work gallery ---------- */
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .gallery-loading, .gallery-empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 40px 20px; }
+  .gallery-empty .big { color: #fff; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+  .g-item { position: relative; display: block; border: 0; padding: 0; margin: 0; background: #000; border-radius: 12px; overflow: hidden; cursor: pointer; aspect-ratio: 4 / 3; }
+  .g-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease, opacity .3s ease; opacity: 0; }
+  .g-item img.loaded { opacity: 1; }
+  .g-item:hover img { transform: scale(1.06); }
+  .g-item::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 -60px 50px -30px rgba(0,0,0,0.55); pointer-events: none; }
+  .g-cap { position: absolute; left: 10px; bottom: 8px; right: 10px; z-index: 2; color: #fff; font-size: 13px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,.6); pointer-events: none; }
+
+  /* Lightbox */
+  .lightbox { position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,.92); display: flex; align-items: center; justify-content: center; }
+  .lightbox[hidden] { display: none; }
+  .lb-img { max-width: 92vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 10px 60px rgba(0,0,0,.6); }
+  .lb-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: #fff; font-size: 40px; line-height: 1; cursor: pointer; opacity: .85; }
+  .lb-close:hover { opacity: 1; }
+  .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.12); border: none; color: #fff; font-size: 26px; width: 52px; height: 52px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .lb-nav:hover { background: var(--red); }
+  .lb-prev { left: 18px; } .lb-next { right: 18px; }
+  @media (max-width: 640px) { .lb-nav { width: 42px; height: 42px; font-size: 20px; } .lb-prev { left: 8px; } .lb-next { right: 8px; } }
 </style>
 </head>
 <body>
@@ -264,6 +286,7 @@
     <nav class="nav">
       <a href="#services">Services</a>
       <a href="#experience">Experience</a>
+      <a href="#work">Our Work</a>
       <a href="#brands">Brands</a>
       <a href="#schedule">Schedule</a>
       <a href="tel:+12083536210" class="btn">Text or Call</a>
@@ -353,6 +376,28 @@
     </div>
   </div>
 </section>
+
+<!-- Our Work / Gallery -->
+<section id="work" style="background: var(--ink-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="kicker">📸 Proof On The Track</span>
+      <h2>Our Work</h2>
+      <p>Real builds, repairs, and race prep from the shop. Swipe through recent jobs.</p>
+    </div>
+    <div id="galleryGrid" class="gallery-grid reveal" aria-live="polite">
+      <div class="gallery-loading">Loading photos…</div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" hidden>
+  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous">&#10094;</button>
+  <img id="lbImg" class="lb-img" src="" alt="" />
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next">&#10095;</button>
+</div>
 
 <!-- Brands -->
 <section id="brands">
@@ -471,6 +516,70 @@
       widget.style.display = 'none'; // hide the empty box
       fallback.hidden = false;       // reveal the working button
     }, 3500);
+  })();
+
+  // ---------- Our Work gallery ----------
+  // Auto-loads every image in the repo's assets/gallery/ folder via the GitHub
+  // API, so adding a photo = uploading it to that folder (no code changes).
+  (function () {
+    var GH_API = 'https://api.github.com/repos/gpracer68/the-riders-garage/contents/assets/gallery';
+    var grid = document.getElementById('galleryGrid');
+    if (!grid) return;
+    var IMG = /\.(jpe?g|png|webp|gif|avif)$/i;
+
+    function prettyCaption(name) {
+      return name.replace(/\.[^.]+$/, '')      // drop extension
+        .replace(/^\d+[-_. ]*/, '')             // drop leading order number
+        .replace(/[-_]+/g, ' ')                 // dashes/underscores -> spaces
+        .replace(/\s+/g, ' ').trim();
+    }
+    function emptyState() {
+      grid.innerHTML = '<div class="gallery-empty"><div class="big">Fresh photos coming soon</div>' +
+        'Recent builds and repairs will show up here.</div>';
+    }
+
+    fetch(GH_API, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
+      .then(function (r) { if (!r.ok) throw new Error('gallery ' + r.status); return r.json(); })
+      .then(function (files) {
+        var imgs = (files || []).filter(function (f) { return f.type === 'file' && IMG.test(f.name); })
+          .sort(function (a, b) { return a.name.localeCompare(b.name, undefined, { numeric: true }); });
+        if (!imgs.length) { emptyState(); return; }
+        window.__trgPhotos = imgs.map(function (f) { return { url: f.download_url, cap: prettyCaption(f.name) }; });
+        grid.innerHTML = '';
+        window.__trgPhotos.forEach(function (p, i) {
+          var btn = document.createElement('button');
+          btn.className = 'g-item';
+          btn.setAttribute('aria-label', p.cap || 'Photo ' + (i + 1));
+          var im = new Image();
+          im.loading = 'lazy';
+          im.alt = p.cap || 'The Rider\'s Garage work photo';
+          im.onload = function () { im.classList.add('loaded'); };
+          im.src = p.url;
+          btn.appendChild(im);
+          if (p.cap) { var c = document.createElement('span'); c.className = 'g-cap'; c.textContent = p.cap; btn.appendChild(c); }
+          btn.addEventListener('click', function () { openLightbox(i); });
+          grid.appendChild(btn);
+        });
+      })
+      .catch(function () { emptyState(); });
+
+    // Lightbox
+    var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg');
+    var cur = 0;
+    function openLightbox(i) {
+      var ps = window.__trgPhotos || []; if (!ps.length) return;
+      cur = (i + ps.length) % ps.length; lbImg.src = ps[cur].url; lbImg.alt = ps[cur].cap || ''; lb.hidden = false;
+    }
+    function close() { lb.hidden = true; lbImg.src = ''; }
+    function step(d) { openLightbox(cur + d); }
+    document.getElementById('lbClose').onclick = close;
+    document.getElementById('lbPrev').onclick = function (e) { e.stopPropagation(); step(-1); };
+    document.getElementById('lbNext').onclick = function (e) { e.stopPropagation(); step(1); };
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close(); else if (e.key === 'ArrowLeft') step(-1); else if (e.key === 'ArrowRight') step(1);
+    });
   })();
 </script>
 </body>
